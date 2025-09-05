@@ -6,7 +6,7 @@ using Real_time_weather_monitoring.Models;
 
 namespace Real_time_weather_monitoring.Bots
 {
-    public class SunBot : IWeatherBot
+    public class SunBot : BotBase, IWeatherBot
     {
         private readonly BotConfig _config;
 
@@ -21,8 +21,7 @@ namespace Real_time_weather_monitoring.Bots
 
             if (_config.TemperatureThreshold.HasValue && data.Temperature > _config.TemperatureThreshold.Value)
             {
-                Console.WriteLine("SunBot activated!");
-                Console.WriteLine($"SunBot: \"{_config.Message}\"");
+                PrintActivation("SunBot", _config.Message);
             }
         }        
     }

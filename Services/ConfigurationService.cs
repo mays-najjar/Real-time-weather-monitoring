@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
+
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Real_time_weather_monitoring.Models;
@@ -16,17 +14,17 @@ namespace Real_time_weather_monitoring.Services
             {
                 throw new FileNotFoundException($"Configuration file not found: {configPath}");
             }
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Path.GetDirectoryName(configPath) ?? Directory.GetCurrentDirectory())
+                .AddJsonFile(Path.GetFileName(configPath), optional: false, reloadOnChange: false)
+                .Build();
 
-            try
+            var botConfig = configuration.Get<BotConfiguration>();
+            if (botConfig == null)
             {
-                var json = File.ReadAllText(configPath);
-                return JsonSerializer.Deserialize<BotConfiguration>(json) 
-                    ?? throw new InvalidOperationException("Failed to deserialize configuration");
+                throw new InvalidOperationException("Failed to bind configuration to BotConfiguration object");
             }
-            catch (JsonException ex)
-            {
-                throw new InvalidOperationException($"Invalid configuration format: {ex.Message}");
-            }
-        }        
+            return botConfig;
+        }
     }
 }

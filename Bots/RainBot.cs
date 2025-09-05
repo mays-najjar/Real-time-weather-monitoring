@@ -6,7 +6,7 @@ using Real_time_weather_monitoring.Models;
 
 namespace Real_time_weather_monitoring.Bots
 {
-    public class RainBot : IWeatherBot
+    public class RainBot : BotBase, IWeatherBot
     {
       private readonly BotConfig _config;
 
@@ -21,8 +21,7 @@ namespace Real_time_weather_monitoring.Bots
 
             if (_config.HumidityThreshold.HasValue && data.Humidity > _config.HumidityThreshold.Value)
             {
-                Console.WriteLine("RainBot activated!");
-                Console.WriteLine($"RainBot: \"{_config.Message}\"");
+                PrintActivation("RainBot", _config.Message);
             }
         }        
     }

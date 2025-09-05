@@ -10,28 +10,20 @@ namespace Real_time_weather_monitoring.Services
 {
     public class WeatherDataService
     {
-        private readonly List<IWeatherDataParser> _parsers;
+        private readonly IWeatherDataParserFactory _parserFactory; // Use the factory
         private readonly List<IWeatherBot> _bots;
 
-        public WeatherDataService(List<IWeatherDataParser> parsers, List<IWeatherBot> bots)
-        {
-            _parsers = parsers;
+         public WeatherDataService(IWeatherDataParserFactory parserFactory, List<IWeatherBot> bots)
+         {
+            _parserFactory = parserFactory;
             _bots = bots;
-        }
-
+         }
         public WeatherData ParseWeatherData(string input)
         {
-            foreach (var parser in _parsers)
-            {
-                if (parser.CanParse(input))
-                {
-                    return parser.Parse(input);
-                }
-            }
-
-            throw new ArgumentException("Unsupported data format");
+            var parser = _parserFactory.GetParser(input); 
+            return parser.Parse(input);
         }
-
+     
         public void ProcessWeatherData(WeatherData data)
         {
             foreach (var bot in _bots)
