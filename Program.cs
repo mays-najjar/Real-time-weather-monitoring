@@ -8,50 +8,65 @@ namespace Real_time_weather_monitoring
     {
         static void Main(string[] args)
         {
+            var ui = new ConsoleUI();
             try
             {
                 var configService = new ConfigurationService();
                 var configPath = Path.GetFullPath("appsettings.json");
                 var config = configService.LoadConfiguration(configPath);
-                var availableParsers = new List<IWeatherDataParser>
+                IBotFactory botFactory = new BotFactory();
+                var bots = botFactory.CreateBots(config);
+                var weatherParser = new WeatherDataParser();
+                var weatherService = new WeatherDataService(weatherParser, bots);
+
+                ui.ShowWelcome();
+
+                var parsers = new List<IWeatherDataParser>
                 {
                     new JsonWeatherDataParser(),
                     new XmlWeatherDataParser()
                 };
-                var parserFactory = new WeatherDataParserFactory(availableParsers);
-                IBotFactory botFactory = new BotFactory();
-                var bots = botFactory.CreateBots(config);
-
-                var weatherService = new WeatherDataService(parserFactory, bots);
-
-                Console.WriteLine("Weather Monitoring System Started!");
-                Console.WriteLine("Enter weather data (JSON or XML format) or type 'exit' to quit:");
 
                 while (true)
                 {
-                    Console.Write("\nEnter weather data: ");
-                    var input = Console.ReadLine();
+                    var input = ui.ReadInput();
 
                     if (string.Equals(input, "exit", StringComparison.OrdinalIgnoreCase))
-                    {
                         break;
-                    }
 
                     if (string.IsNullOrWhiteSpace(input))
                     {
-                        Console.WriteLine("Please enter valid weather data.");
+                        ui.ShowMessage("Please enter valid weather data.");
                         continue;
                     }
 
-                    weatherService.ProcessInput(input);
+                    var parser = parsers.FirstOrDefault(p => p.CanParse(input));
+                    if (parser != null)
+                    {
+                        weatherParser.SetParser(parser);
+                    }
+                    else
+                    {
+                        ui.ShowMessage("Unsupported data format. Please enter JSON or XML.");
+                        continue;
+                    }
+
+                    try
+                    {
+                        weatherService.ProcessInput(input);
+                    }
+                    catch (Exception ex)
+                    {
+                        ui.ShowError($"Error: {ex.Message}");
+                    }
                 }
 
-                Console.WriteLine("Weather Monitoring System Stopped.");
+                ui.ShowMessage("Weather Monitoring System Stopped.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Fatal error: {ex.Message}");
-                Console.WriteLine("Press any key to exit...");
+                ui.ShowError($"Fatal error: {ex.Message}");
+                ui.ShowMessage("Press any key to exit...");
                 Console.ReadKey();
             }
         }

@@ -8,21 +8,17 @@ namespace Real_time_weather_monitoring.Bots
 {
     public class RainBot : BotBase, IWeatherBot
     {
-      private readonly BotConfig _config;
 
-        public RainBot(BotConfig config)
-        {
-            _config = config;
-        }
-
+        public RainBot(BotConfig config) : base(config) { }
+        protected override string BotName => "RainBot";
         public void Update(WeatherData data)
         {
             if (!_config.Enabled) return;
 
             if (_config.HumidityThreshold.HasValue && data.Humidity > _config.HumidityThreshold.Value)
             {
-                PrintActivation("RainBot", _config.Message);
+                PrintActivation();
             }
-        }        
+        }
     }
 }

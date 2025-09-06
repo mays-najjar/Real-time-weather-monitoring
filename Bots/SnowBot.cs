@@ -8,21 +8,17 @@ namespace Real_time_weather_monitoring.Bots
 {
     public class SnowBot : BotBase, IWeatherBot
     {
-        private readonly BotConfig _config;
 
-        public SnowBot(BotConfig config)
-        {
-            _config = config;
-        }
-
+        public SnowBot(BotConfig config) : base(config) { }
+        protected override string BotName => "SnowBot";
         public void Update(WeatherData data)
         {
             if (!_config.Enabled) return;
 
             if (_config.TemperatureThreshold.HasValue && data.Temperature < _config.TemperatureThreshold.Value)
             {
-                PrintActivation("SnowBot", _config.Message);
+                PrintActivation();
             }
-        }        
+        }
     }
 }

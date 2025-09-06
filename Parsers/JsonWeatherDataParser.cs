@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Real_time_weather_monitoring.Models;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Real_time_weather_monitoring.Services;
 
 namespace Real_time_weather_monitoring.Parsers
 {
@@ -14,18 +15,18 @@ namespace Real_time_weather_monitoring.Parsers
         {
             try
             {
-                return JsonSerializer.Deserialize<WeatherData>(input) 
+                return JsonSerializer.Deserialize<WeatherData>(input)
                     ?? throw new ArgumentException("Invalid JSON format");
             }
             catch (JsonException ex)
             {
-                throw new ArgumentException($"Failed to parse JSON: {ex.Message}");
+                throw new ArgumentException($"Failed to parse JSON: {ex.Message}", ex);
             }
         }
 
         public bool CanParse(string input)
         {
             return input.Trim().StartsWith('{') && input.Trim().EndsWith('}');
-        }         
+        }   
     }
 }

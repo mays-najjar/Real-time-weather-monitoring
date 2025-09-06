@@ -10,20 +10,18 @@ namespace Real_time_weather_monitoring.Services
 {
     public class WeatherDataService
     {
-        private readonly IWeatherDataParserFactory _parserFactory; // Use the factory
+        private readonly IWeatherDataParser _parser; 
         private readonly List<IWeatherBot> _bots;
 
-         public WeatherDataService(IWeatherDataParserFactory parserFactory, List<IWeatherBot> bots)
+         public WeatherDataService(IWeatherDataParser parser, List<IWeatherBot> bots)
          {
-            _parserFactory = parserFactory;
+            _parser = parser;
             _bots = bots;
          }
-        public WeatherData ParseWeatherData(string input)
+         public WeatherData ParseWeatherData(string input)
         {
-            var parser = _parserFactory.GetParser(input); 
-            return parser.Parse(input);
+            return _parser.Parse(input);
         }
-     
         public void ProcessWeatherData(WeatherData data)
         {
             foreach (var bot in _bots)

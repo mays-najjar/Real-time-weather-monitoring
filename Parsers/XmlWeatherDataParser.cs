@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Real_time_weather_monitoring.Models;
+using Real_time_weather_monitoring.Services;
 
 namespace Real_time_weather_monitoring.Parsers
 {
@@ -17,7 +18,7 @@ namespace Real_time_weather_monitoring.Parsers
                 var serializer = new XmlSerializer(typeof(WeatherData));
                 using (var reader = new StringReader(input))
                 {
-                    return (WeatherData?)serializer.Deserialize(reader) 
+                    return (WeatherData?)serializer.Deserialize(reader)
                         ?? throw new ArgumentException("Invalid XML format");
                 }
             }
@@ -30,6 +31,6 @@ namespace Real_time_weather_monitoring.Parsers
         public bool CanParse(string input)
         {
             return input.Trim().StartsWith('<') && input.Trim().EndsWith('>');
-        }        
+        }
     }
 }

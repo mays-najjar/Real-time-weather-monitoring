@@ -8,12 +8,9 @@ namespace Real_time_weather_monitoring.Bots
 {
     public class SunBot : BotBase, IWeatherBot
     {
-        private readonly BotConfig _config;
+        public SunBot(BotConfig config) : base(config){}
 
-        public SunBot(BotConfig config)
-        {
-            _config = config;
-        }
+        protected override string BotName => "SunBot";
 
         public void Update(WeatherData data)
         {
@@ -21,7 +18,7 @@ namespace Real_time_weather_monitoring.Bots
 
             if (_config.TemperatureThreshold.HasValue && data.Temperature > _config.TemperatureThreshold.Value)
             {
-                PrintActivation("SunBot", _config.Message);
+                PrintActivation();
             }
         }        
     }

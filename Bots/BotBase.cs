@@ -2,15 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Real_time_weather_monitoring.Models;
 
 namespace Real_time_weather_monitoring.Bots
 {
     public abstract class BotBase
     {
-        protected void PrintActivation(string botName, string message)
+        protected readonly BotConfig _config;
+
+        protected BotBase(BotConfig config)
         {
-            Console.WriteLine($"{botName} activated!");
-            Console.WriteLine($"{botName}: \"{message}\"");
+            _config = config;
+        }
+
+         protected abstract string BotName { get; }
+        protected void PrintActivation()
+        {
+            Console.WriteLine($"{BotName} activated!");
+            Console.WriteLine($"{BotName}: \"{_config.Message}\"");
         }
     }
 }
