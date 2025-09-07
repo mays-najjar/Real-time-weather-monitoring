@@ -3,6 +3,7 @@
 Design and implement a C# console application that simulates a real-time weather monitoring and reporting service. The system receives and processes raw weather data in multiple formats (JSON, XML, etc.) from various weather stations for different locations. The application includes different types of 'weather bots', each configured to behave differently based on the weather updates it receives.
 
 ---
+[![build and test](https://github.com/mays-najjar/Real-time-weather-monitoring/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/mays-najjar/Real-time-weather-monitoring/actions/workflows/build-and-test.yml)
 
 ## **Supported Input Formats**
 
